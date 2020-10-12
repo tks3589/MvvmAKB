@@ -1,4 +1,4 @@
-package com.example.mvvmakb
+package com.example.mvvmakb.model
 
 import android.os.Parcelable
 
