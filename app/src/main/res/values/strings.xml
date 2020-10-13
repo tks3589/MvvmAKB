@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MvvmAKB</string>
+    <string name="nav_home">home</string>
+    <string name="events">home</string>
+    <string name="members">home</string>
+
 </resources>

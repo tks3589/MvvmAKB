@@ -1,13 +1,13 @@
 package com.example.mvvmakb.data
 
 import com.example.mvvmakb.model.LiveRecord
+import com.example.mvvmakb.model.MainData
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 import java.util.concurrent.TimeUnit
 
 class RetrofitHelper {
@@ -19,6 +19,7 @@ class RetrofitHelper {
             RetrofitHelper()
         }
     }
+
     init {
         val httpClient = OkHttpClient.Builder()
             .connectTimeout(10,TimeUnit.SECONDS)
@@ -34,14 +35,13 @@ class RetrofitHelper {
     }
 
     fun getLiveRecord(callback:Callback<List<LiveRecord>>){
-        service.liverecord().enqueue(object: Callback<List<LiveRecord>>{
+        service.getLiveRecord().enqueue(object: Callback<List<LiveRecord>>{
             override fun onFailure(call: Call<List<LiveRecord>>, t: Throwable) {
                 callback.onFailure(call,t)
             }
 
             override fun onResponse(
-                call: Call<List<LiveRecord>>,
-                response: Response<List<LiveRecord>>
+                call: Call<List<LiveRecord>>, response: Response<List<LiveRecord>>
             ) {
                 callback.onResponse(call, response)
             }
@@ -49,11 +49,16 @@ class RetrofitHelper {
         })
     }
 
+    fun getMainData(callback: Callback<MainData>){
+        service.getMainData().enqueue(object :Callback<MainData>{
+            override fun onFailure(call: Call<MainData>, t: Throwable) {
+                callback.onFailure(call,t)
+            }
 
-
-}
-interface AkbService{
-    @GET("liverecord")
-    fun liverecord(): Call<List<LiveRecord>>
+            override fun onResponse(call: Call<MainData>, response: Response<MainData>) {
+                callback.onResponse(call, response)
+            }
+        })
+    }
 
 }

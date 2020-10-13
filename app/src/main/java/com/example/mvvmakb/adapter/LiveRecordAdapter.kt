@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.mvvmakb.R
 import com.example.mvvmakb.model.LiveRecord
 import com.example.mvvmakb.viewmodel.LiveRecordViewModel
-import kotlinx.android.synthetic.main.item_akb.view.*
+import kotlinx.android.synthetic.main.item_live_record.view.*
 
 class LiveRecordAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     private val VIEW_TYPE_ITEM = 0
@@ -32,14 +32,14 @@ class LiveRecordAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
-            VIEW_TYPE_ITEM -> LiveRecordHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_akb,parent,false))
+            VIEW_TYPE_ITEM -> LiveRecordHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_live_record,parent,false))
             VIEW_TYPE_LOADING -> LoadingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loading,parent,false))
             else -> DoneViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_done,parent,false))
         }
     }
 
     override fun getItemCount(): Int {
-        if(liveRecordList.isEmpty()||empty)
+        if(liveRecordList.isEmpty())
             return 1
         return liveRecordList.size
     }
