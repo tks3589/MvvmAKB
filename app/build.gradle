@@ -44,6 +44,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
+    //expandable_textview
+    implementation 'nb.scode:ExpandableTextView:0.0.1d'
+
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
 
