@@ -3,5 +3,17 @@
     <string name="nav_home">home</string>
     <string name="events">home</string>
     <string name="members">home</string>
+    <array name="Events">
+        <item>News</item>
+        <item>Upcoming</item>
+    </array>
+    <string name="nav_about">About us</string>
+    <string name="nav_langlive">Langlive</string>
+    <string name="nav_video">Related Videos</string>
+    <string name="nav_socialrank">Social Data Rank</string>
+    <string name="nav_setting">setting</string>
+    <string name="nav_review">review</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>

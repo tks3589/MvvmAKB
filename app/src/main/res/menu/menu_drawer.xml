@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/nav_about"
+            android:icon="@drawable/ic_about"/>
+        <item
+            android:id="@+id/nav_langlive"
+            android:title="@string/nav_langlive"
+            android:icon="@drawable/ic_event"/>
+        <item
+            android:id="@+id/nav_video"
+            android:title="@string/nav_video"
+            android:icon="@drawable/ic_relatedvideo"/>
+        <item
+            android:id="@+id/nav_socialrank"
+            android:title="@string/nav_socialrank"
+            android:icon="@android:drawable/ic_menu_sort_by_size"/>
+<!--        <item-->
+<!--            android:id="@+id/nav_photo"-->
+<!--            android:title="@string/nav_photo" />-->
+        <item
+            android:id="@+id/nav_setting"
+            android:title="@string/nav_setting"
+            android:icon="@drawable/ic_setting"/>
+
+    </group>
+
+    <group android:id="@+id/group_review">
+        <item
+            android:id="@+id/nav_review"
+            android:title="@string/nav_review"
+            android:icon="@drawable/ic_review"/>
+    </group>
+</menu>
