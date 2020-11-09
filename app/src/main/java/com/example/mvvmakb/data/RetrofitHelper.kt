@@ -1,9 +1,6 @@
 package com.example.mvvmakb.data
 
-import com.example.mvvmakb.model.LiveRecord
-import com.example.mvvmakb.model.MainData
-import com.example.mvvmakb.model.Member
-import com.example.mvvmakb.model.News
+import com.example.mvvmakb.model.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -93,6 +90,36 @@ class RetrofitHelper {
             }
 
         })
+    }
+
+    fun getUpcoming(page:Int = 1,callback: Callback<ArrayList<News>>){
+        service.getUpcoming(page).enqueue(object : Callback<ArrayList<News>>{
+            override fun onFailure(call: Call<ArrayList<News>>, t: Throwable) {
+                callback.onFailure(call,t)
+            }
+
+            override fun onResponse(
+                call: Call<ArrayList<News>>,
+                response: Response<ArrayList<News>>
+            ) {
+                callback.onResponse(call, response)
+            }
+
+        })
+    }
+
+    fun getIgPost(id:String,date:String,callback: Callback<ArrayList<Ig>>){
+        service.getIgPost(id,date).enqueue(object : Callback<ArrayList<Ig>>{
+            override fun onFailure(call: Call<ArrayList<Ig>>, t: Throwable) {
+                callback.onFailure(call,t)
+            }
+
+            override fun onResponse(call: Call<ArrayList<Ig>>, response: Response<ArrayList<Ig>>) {
+                callback.onResponse(call,response)
+            }
+
+        })
+
     }
 
 }

@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.mvvmakb.R
-import com.example.mvvmakb.adapter.NewsAdapter
+import com.example.mvvmakb.adapter.EventsAdapter
 import kotlinx.android.synthetic.main.fragment_news.view.*
 
 class NewsFragment : Fragment() {
-    private lateinit var newsAdapter: NewsAdapter
+    private lateinit var eventsAdapter: EventsAdapter
 
     companion object{
         val instance : NewsFragment by lazy {
@@ -24,8 +24,8 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_news,container,false)
-        newsAdapter = NewsAdapter(view.context)
-        view.news_listView.adapter = newsAdapter
+        eventsAdapter = EventsAdapter(view.context,"news")
+        view.news_listView.adapter = eventsAdapter
 
         return view
     }

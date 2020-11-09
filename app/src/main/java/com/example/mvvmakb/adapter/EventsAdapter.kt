@@ -11,22 +11,32 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mvvmakb.R
 import com.example.mvvmakb.model.News
 import com.example.mvvmakb.viewmodel.NewsViewModel
+import com.example.mvvmakb.viewmodel.UpcomingViewModel
 import kotlinx.android.synthetic.main.item_notification.view.*
 
-class NewsAdapter() : BaseAdapter() {
+class EventsAdapter() : BaseAdapter() {
     private lateinit var mContext: FragmentActivity
     private lateinit var newsViewModel: NewsViewModel
+    private lateinit var upcomingViewModel: UpcomingViewModel
     private var newsArrayList: ArrayList<News> = ArrayList()
     private val VIEW_TYPE_LOADING = 0
     private val VIEW_TYPE_ITEM = 1
 
-    constructor(content:Context) : this(){
+    constructor(content:Context,type:String) : this(){
         mContext = content as FragmentActivity
-        newsViewModel = ViewModelProvider(mContext).get(NewsViewModel::class.java)
-        newsViewModel.getLiveData().observe(mContext,androidx.lifecycle.Observer {
-            newsArrayList = it
-            notifyDataSetChanged()
-        })
+        if(type == "news") {
+            newsViewModel = ViewModelProvider(mContext).get(NewsViewModel::class.java)
+            newsViewModel.getLiveData().observe(mContext, androidx.lifecycle.Observer {
+                newsArrayList = it
+                notifyDataSetChanged()
+            })
+        }else{
+            upcomingViewModel = ViewModelProvider(mContext).get(UpcomingViewModel::class.java)
+            upcomingViewModel.getLiveData().observe(mContext, androidx.lifecycle.Observer {
+                newsArrayList = it
+                notifyDataSetChanged()
+            })
+        }
     }
 
 

@@ -24,10 +24,8 @@ class EventsFragment : Fragment(){
     ): View? {
         val view = inflater.inflate(R.layout.fragment_events, container, false)
         val events_viewpager = view.events_viewpager
-        context?.let {
-            events_viewpager.adapter = EventsPagerAdapter(it,(context as FragmentActivity).supportFragmentManager)
-            view.events_tab.setupWithViewPager(events_viewpager)
-        }
+        events_viewpager.adapter = EventsPagerAdapter(view.context,(view.context as FragmentActivity).supportFragmentManager)
+        view.events_tab.setupWithViewPager(events_viewpager)
         return view
     }
 }

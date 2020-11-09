@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/storiesitem_width"
     android:layout_height="@dimen/storiesitem_height"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp">
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
 
     <ImageView
         android:id="@+id/tiktok_imgview_back"

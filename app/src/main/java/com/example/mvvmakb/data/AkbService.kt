@@ -1,9 +1,6 @@
 package com.example.mvvmakb.data
 
-import com.example.mvvmakb.model.LiveRecord
-import com.example.mvvmakb.model.MainData
-import com.example.mvvmakb.model.Member
-import com.example.mvvmakb.model.News
+import com.example.mvvmakb.model.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -23,4 +20,18 @@ interface AkbService {
         @Path("page")
         page: Int
     ): Call<ArrayList<News>>
+
+    @GET("upcoming3/{page}")
+    fun getUpcoming(
+        @Path("page")
+        page: Int
+    ): Call<ArrayList<News>>
+
+    @GET("ig/{id}/{date}")
+    fun getIgPost(
+        @Path("id")
+        id: String,
+        @Path("date")
+        date: String
+    ): Call<ArrayList<Ig>>
 }

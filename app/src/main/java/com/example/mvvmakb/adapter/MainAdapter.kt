@@ -2,6 +2,7 @@ package com.example.mvvmakb.adapter
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.mvvmakb.R
+import com.example.mvvmakb.OnReceiveDataListener
 import com.example.mvvmakb.fragment.IgVideoFragment
 import com.example.mvvmakb.fragment.MainImgsFragment
 import com.example.mvvmakb.model.*
+import com.example.mvvmakb.viewmodel.IgPostViewModel
 import com.example.mvvmakb.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.item_main_igpost.view.*
 import kotlinx.android.synthetic.main.item_main_igvideo.view.*
@@ -31,26 +34,68 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val VIEW_TYPE_VIDEO_ITEM = 5
     private val VIEW_TYPE_IG_ITEM = 6
     private lateinit var mViewModel: MainViewModel
+    private lateinit var igViewModel: IgPostViewModel
     private lateinit var mContext: Context
-    private lateinit var mainData: MainData
     private var mainImgsArrayList: ArrayList<MainImgs> = ArrayList()
     private var storiesArrayList: ArrayList<Stories> = ArrayList()
     private var tiktokArrayList: ArrayList<Tiktok>  = ArrayList()
     private var igvideoArrayList: ArrayList<Ig>  = ArrayList()
     private var igpostArrayList: ArrayList<Ig>  = ArrayList()
+    private lateinit var mListener: OnReceiveDataListener
+    private var LAST_ONE = false
+    private val id = "akb48teamtp"
 
     constructor(context: Context):this(){
         mContext = context as FragmentActivity
         mViewModel = ViewModelProvider(context).get(MainViewModel::class.java)
+        igViewModel = ViewModelProvider(context).get(IgPostViewModel::class.java)
+
+        mViewModel.setListener(object :OnReceiveDataListener{
+            override fun onReceiveData() {
+                mListener.onReceiveData()
+                if(!mViewModel.isInit()){
+                    mViewModel.setInit(true)
+                }
+            }
+
+            override fun onFailedToReceiveData() {
+                mListener.onFailedToReceiveData()
+            }
+
+            override fun onNoMoreData() {
+            }
+
+        })
         mViewModel.getLiveData().observe(context,androidx.lifecycle.Observer {
-            mainData = it
-            mainImgsArrayList = mainData.mainImgsArrayList
-            storiesArrayList = mainData.storiesArrayList
-            tiktokArrayList = mainData.tiktokArrayList
-            igvideoArrayList = mainData.igVideoArrayList
-            igpostArrayList = mainData.igPostArrayList
+            mainImgsArrayList = it.mainImgsArrayList
+            storiesArrayList = it.storiesArrayList
+            tiktokArrayList = it.tiktokArrayList
+            igvideoArrayList = it.igVideoArrayList
+            igpostArrayList = it.igPostArrayList
             notifyDataSetChanged()
         })
+
+        igViewModel.setListener(object :OnReceiveDataListener{
+            override fun onReceiveData() {
+                mListener.onReceiveData()
+            }
+
+            override fun onFailedToReceiveData() {
+                mListener.onFailedToReceiveData()
+            }
+
+            override fun onNoMoreData() {
+                mListener.onNoMoreData()
+                LAST_ONE = true
+            }
+
+        })
+        igViewModel.getLiveData().observe(context,androidx.lifecycle.Observer {
+            igpostArrayList.addAll(it)
+            notifyDataSetChanged()
+        })
+
+        refresh()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -78,8 +123,10 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             VIEW_TYPE_TIKTOK_ITEM
         else if(igvideoArrayList.size > 0 && position == 3)
             VIEW_TYPE_VIDEO_ITEM
-        else if(igpostArrayList.size > 0 && position >= 4)
+        else if(igpostArrayList.size > position && position >= 4)
             VIEW_TYPE_IG_ITEM
+        else if(LAST_ONE)
+            VIEW_TYPE_DONE
         else
             VIEW_TYPE_LOADING
     }
@@ -218,4 +265,23 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class DoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    fun refresh(){
+        mViewModel.refreshData()
+        mViewModel.loadMainData()
+        LAST_ONE = false
+    }
+
+    fun isInit():Boolean{
+        return mViewModel.isInit()
+    }
+
+    fun loadIgPost(){
+        val date = igpostArrayList[igpostArrayList.size-1].date
+        igViewModel.loadIgPost(id,date)
+    }
+
+    fun setListener(onReceiveDataListener: OnReceiveDataListener){
+        mListener = onReceiveDataListener
+    }
 }
