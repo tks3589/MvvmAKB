@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.mvvmakb.R
 import com.example.mvvmakb.model.Ig
 import kotlinx.android.synthetic.main.item_main_igvideo_viewpager.view.*
@@ -29,7 +31,10 @@ class IgVideoFragment: Fragment() {
             val imgUrl = data[0]
             val videoUrl = data[1]
             context?.let {
-                Glide.with(it).load(imgUrl).into(imageview)
+                Glide.with(it)
+                    .load(imgUrl)
+                    .transform(CenterCrop(), RoundedCorners(10))
+                    .into(imageview)
             }
         }
         return view

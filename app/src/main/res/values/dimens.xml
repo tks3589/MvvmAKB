@@ -12,4 +12,5 @@
     <dimen name="mbimg_width">100dp</dimen>
     <dimen name="mbimg_height">100dp</dimen>
     <dimen name="news_height">170dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
 </resources>

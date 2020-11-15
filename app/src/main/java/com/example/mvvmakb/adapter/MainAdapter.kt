@@ -2,7 +2,6 @@ package com.example.mvvmakb.adapter
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
 import com.example.mvvmakb.R
 import com.example.mvvmakb.OnReceiveDataListener
 import com.example.mvvmakb.fragment.IgVideoFragment
 import com.example.mvvmakb.fragment.MainImgsFragment
 import com.example.mvvmakb.model.*
+import com.example.mvvmakb.view.ScaleInTransformer
 import com.example.mvvmakb.viewmodel.IgPostViewModel
 import com.example.mvvmakb.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.item_main_igpost.view.*
@@ -226,8 +228,22 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             for (i in 0 until igvideoArrayList.size) {
                 igVideoFragmentList.add(getIgVideoFragment(igvideoArrayList[i]))
             }
-            val fragmentManager = (mContext as FragmentActivity).supportFragmentManager
-            igvideo_viewpager.adapter = IgVideoPagerAdapter(fragmentManager, igVideoFragmentList)
+            val fragmentActivity = (mContext as FragmentActivity)
+            igvideo_viewpager.apply {
+                offscreenPageLimit = 1
+                val recyclerView = getChildAt(0) as RecyclerView
+                recyclerView.apply {
+                    val padding = resources.getDimensionPixelOffset(R.dimen.dp_10) +
+                            resources.getDimensionPixelOffset(R.dimen.dp_10)
+                    setPadding(padding, 0, padding, 0)
+                    clipToPadding = false
+                }
+            }
+            val compositePageTransformer = CompositePageTransformer()
+            compositePageTransformer.addTransformer(ScaleInTransformer())
+            compositePageTransformer.addTransformer(MarginPageTransformer(mContext.resources.getDimension(R.dimen.dp_10).toInt()))
+            igvideo_viewpager.setPageTransformer(compositePageTransformer)
+            igvideo_viewpager.adapter = IgVideoPagerAdapter(fragmentActivity, igVideoFragmentList)
         }
 
         private fun getIgVideoFragment(ig:Ig):IgVideoFragment{
@@ -241,9 +257,13 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class IgPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val igpost_date = itemView.igpost_date
+        private val igpost_viewpager = itemView.igpost_viewpager
+        private val igpost_linear_h = itemView.igpost_linear_content
         private val igpost_content = itemView.igpost_content
         fun bind(ig: Ig){
             igpost_date.text = ig.date
+            //igpost_viewpager.adapter = IgPostPagerAdapter(mContext,ig.imgurls)
+            //igpost_linear_h
             igpost_content.setText(ig.content)
             igpost_content.resetState(true)
             igpost_content.drawableExpand = null
