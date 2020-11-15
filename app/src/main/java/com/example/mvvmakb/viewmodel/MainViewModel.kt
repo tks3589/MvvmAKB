@@ -34,6 +34,7 @@ class MainViewModel : BaseViewModel(){
     }
 
     fun refreshData(){
+        init.value = false
         item.value = MainData()
     }
 

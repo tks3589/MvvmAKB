@@ -20,6 +20,10 @@ class RecyclerViewLoadMoreListener(layoutManager: LinearLayoutManager, visibleTh
         isScrolledToEnd = true
     }
 
+    fun resetScroll(){
+        isScrolledToEnd = false
+    }
+
     fun setLoaded() {
         isLoading = false
     }

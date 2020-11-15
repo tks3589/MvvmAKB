@@ -144,50 +144,49 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class MainImgsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val mainimgs_linear_h = itemView.mainimgs_linear_h
         private val mainimgs_viewpager = itemView.mainimgs_viewpager
-        private var tag = itemView.tag
+
         fun bind(mainImgsArrayList: ArrayList<MainImgs>){ //注意bind執行次數 getItemCount會從0開始
-            if(tag == null) {
-                tag = true
-                var mainImgsFragmentList: ArrayList<MainImgsFragment> = ArrayList()
-                if (mainImgsArrayList.size > 1) {
-                    for (i in 0 until mainImgsArrayList.size) {
-                        val view = View(mContext)
-                        view.setBackgroundResource(R.drawable.mainimgs_dot)
-                        view.isEnabled = false
-                        val dot_dis = mContext.resources.getDimension(R.dimen.dot_dis).toInt()
-                        val layoutParams = LinearLayout.LayoutParams(dot_dis, dot_dis)
-                        layoutParams.leftMargin = 10
-                        mainimgs_linear_h.addView(view, layoutParams)
-                        mainImgsFragmentList.add(getMainImgsFragment(mainImgsArrayList[i]))
-                    }
-                    mainimgs_linear_h.getChildAt(0).isEnabled = true
-                    mainimgs_viewpager.offscreenPageLimit = 9
-                    mainimgs_viewpager.addOnPageChangeListener(object :
-                        ViewPager.OnPageChangeListener {
-                        var tmp = 0
-                        override fun onPageScrollStateChanged(state: Int) {
-                        }
+            mainimgs_linear_h.removeAllViews()
 
-                        override fun onPageScrolled(
-                            position: Int,
-                            positionOffset: Float,
-                            positionOffsetPixels: Int
-                        ) {
-                        }
-
-                        override fun onPageSelected(position: Int) {
-                            mainimgs_linear_h.getChildAt(tmp).isEnabled = false
-                            mainimgs_linear_h.getChildAt(position).isEnabled = true
-                            tmp = position
-                        }
-                    })
-                } else {
-                    mainImgsFragmentList.add(getMainImgsFragment(mainImgsArrayList[0]))
+            var mainImgsFragmentList: ArrayList<MainImgsFragment> = ArrayList()
+            if (mainImgsArrayList.size > 1) {
+                for (i in 0 until mainImgsArrayList.size) {
+                    val view = View(mContext)
+                    view.setBackgroundResource(R.drawable.mainimgs_dot)
+                    view.isEnabled = false
+                    val dot_dis = mContext.resources.getDimension(R.dimen.dot_dis).toInt()
+                    val layoutParams = LinearLayout.LayoutParams(dot_dis, dot_dis)
+                    layoutParams.leftMargin = 10
+                    mainimgs_linear_h.addView(view, layoutParams)
+                    mainImgsFragmentList.add(getMainImgsFragment(mainImgsArrayList[i]))
                 }
+                mainimgs_linear_h.getChildAt(0).isEnabled = true
+                mainimgs_viewpager.offscreenPageLimit = 9
+                mainimgs_viewpager.addOnPageChangeListener(object :
+                    ViewPager.OnPageChangeListener {
+                    var tmp = 0
+                    override fun onPageScrollStateChanged(state: Int) {
+                    }
 
-                val fragmentManager = (mContext as FragmentActivity).supportFragmentManager
-                mainimgs_viewpager.adapter = MainImgsPagerAdapter(fragmentManager, mainImgsFragmentList)
+                    override fun onPageScrolled(
+                        position: Int,
+                        positionOffset: Float,
+                        positionOffsetPixels: Int
+                    ) {
+                    }
+
+                    override fun onPageSelected(position: Int) {
+                        mainimgs_linear_h.getChildAt(tmp).isEnabled = false
+                        mainimgs_linear_h.getChildAt(position).isEnabled = true
+                        tmp = position
+                    }
+                })
+            } else {
+                mainImgsFragmentList.add(getMainImgsFragment(mainImgsArrayList[0]))
             }
+
+            val fragmentManager = (mContext as FragmentActivity).supportFragmentManager
+            mainimgs_viewpager.adapter = MainImgsPagerAdapter(fragmentManager, mainImgsFragmentList)
         }
 
         private fun getMainImgsFragment(mainImgs:MainImgs) : MainImgsFragment{
@@ -200,48 +199,37 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    inner class StoriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+     inner class StoriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val stories_thumbnails = itemView.stories_thumbnails
-        private var tag = itemView.tag
         fun bind(storiesArrayList: ArrayList<Stories>){
-            if(tag == null) {
-                tag = true
-                val linearLayoutManager = LinearLayoutManager(mContext)
-                linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-                stories_thumbnails.layoutManager = linearLayoutManager
-                stories_thumbnails.adapter = StoriesAdapter(mContext, storiesArrayList)
-            }
+            val linearLayoutManager = LinearLayoutManager(mContext)
+            linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+            stories_thumbnails.layoutManager = linearLayoutManager
+            stories_thumbnails.adapter = StoriesAdapter(mContext, storiesArrayList)
         }
     }
 
     inner class TiktokViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val tiktok_thumbnails = itemView.tiktok_thumbnails
-        private var tag = itemView.tag
         fun bind(tiktokArrayList: ArrayList<Tiktok>){
-            if(tag == null) {
-                tag = true
-                val linearLayoutManager = LinearLayoutManager(mContext)
-                linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-                tiktok_thumbnails.layoutManager = linearLayoutManager
-                tiktok_thumbnails.adapter = TiktokAdapter(mContext, tiktokArrayList)
-            }
+            val linearLayoutManager = LinearLayoutManager(mContext)
+            linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+            tiktok_thumbnails.layoutManager = linearLayoutManager
+            tiktok_thumbnails.adapter = TiktokAdapter(mContext, tiktokArrayList)
         }
     }
 
     inner class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val igvideo_viewpager = itemView.igvideo_viewpager
-        private var tag = itemView.tag
         fun bind(igvideoArrayList: ArrayList<Ig>){
-            if(tag == null) {
-                tag = true
-                val igVideoFragmentList: ArrayList<IgVideoFragment> = ArrayList()
-                for (i in 0 until igvideoArrayList.size) {
-                    igVideoFragmentList.add(getIgVideoFragment(igvideoArrayList[i]))
-                }
-                val fragmentManager = (mContext as FragmentActivity).supportFragmentManager
-                igvideo_viewpager.adapter = IgVideoPagerAdapter(fragmentManager, igVideoFragmentList)
+            val igVideoFragmentList: ArrayList<IgVideoFragment> = ArrayList()
+            for (i in 0 until igvideoArrayList.size) {
+                igVideoFragmentList.add(getIgVideoFragment(igvideoArrayList[i]))
             }
+            val fragmentManager = (mContext as FragmentActivity).supportFragmentManager
+            igvideo_viewpager.adapter = IgVideoPagerAdapter(fragmentManager, igVideoFragmentList)
         }
+
         private fun getIgVideoFragment(ig:Ig):IgVideoFragment{
             val igVideoFragment = IgVideoFragment.newInstance()
             val bundle = Bundle()
@@ -266,7 +254,7 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class DoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    fun refresh(){
+    fun refresh(){ //recyclerview記錄滑動位置
         mViewModel.refreshData()
         mViewModel.loadMainData()
         LAST_ONE = false
@@ -277,7 +265,7 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     fun loadIgPost(){
-        val date = igpostArrayList[igpostArrayList.size-1].date
+        val date = igpostArrayList[igpostArrayList.size-1].date //viewmodel -> get set  date
         igViewModel.loadIgPost(id,date)
     }
 

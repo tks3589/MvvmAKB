@@ -59,6 +59,7 @@ class MainFragment : Fragment(){
         view.swipeRefreshLayout.apply {
             setOnRefreshListener {
                 adapter.refresh()
+                scrollListener.resetScroll()
                 isRefreshing = false
             }
         }
