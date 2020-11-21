@@ -2,6 +2,7 @@ package com.example.mvvmakb.adapter
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
+import androidx.viewpager2.widget.ViewPager2
 import com.example.mvvmakb.R
 import com.example.mvvmakb.OnReceiveDataListener
 import com.example.mvvmakb.fragment.IgVideoFragment
@@ -26,6 +28,7 @@ import kotlinx.android.synthetic.main.item_main_igvideo.view.*
 import kotlinx.android.synthetic.main.item_main_imgs.view.*
 import kotlinx.android.synthetic.main.item_main_stories.view.*
 import kotlinx.android.synthetic.main.item_main_tiktok.view.*
+import java.lang.Exception
 
 class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val VIEW_TYPE_LOADING = 0
@@ -148,21 +151,13 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val mainimgs_viewpager = itemView.mainimgs_viewpager
 
         fun bind(mainImgsArrayList: ArrayList<MainImgs>){ //注意bind執行次數 getItemCount會從0開始
-            mainimgs_linear_h.removeAllViews()
-
             var mainImgsFragmentList: ArrayList<MainImgsFragment> = ArrayList()
+
             if (mainImgsArrayList.size > 1) {
+                bindDotView(mainimgs_linear_h,mainImgsArrayList.size)
                 for (i in 0 until mainImgsArrayList.size) {
-                    val view = View(mContext)
-                    view.setBackgroundResource(R.drawable.mainimgs_dot)
-                    view.isEnabled = false
-                    val dot_dis = mContext.resources.getDimension(R.dimen.dot_dis).toInt()
-                    val layoutParams = LinearLayout.LayoutParams(dot_dis, dot_dis)
-                    layoutParams.leftMargin = 10
-                    mainimgs_linear_h.addView(view, layoutParams)
                     mainImgsFragmentList.add(getMainImgsFragment(mainImgsArrayList[i]))
                 }
-                mainimgs_linear_h.getChildAt(0).isEnabled = true
                 mainimgs_viewpager.offscreenPageLimit = 9
                 mainimgs_viewpager.addOnPageChangeListener(object :
                     ViewPager.OnPageChangeListener {
@@ -260,10 +255,33 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val igpost_viewpager = itemView.igpost_viewpager
         private val igpost_linear_h = itemView.igpost_linear_content
         private val igpost_content = itemView.igpost_content
+
         fun bind(ig: Ig){
+            val adapter = IgPostPagerAdapter(mContext,ig.imgurls)
+            igpost_viewpager.adapter = adapter
+
+            val itemCount = adapter.itemCount
+            if(itemCount>1){
+                bindDotView(igpost_linear_h,itemCount)
+                //igpost_viewpager.offscreenPageLimit = 3
+                igpost_viewpager.registerOnPageChangeCallback(object :ViewPager2.OnPageChangeCallback(){
+                    var tmp = 0
+                    override fun onPageSelected(position: Int) {
+                        try {
+                            igpost_linear_h.getChildAt(tmp).isEnabled = false  //bug: maybe = null
+                            igpost_linear_h.getChildAt(position).isEnabled = true
+                            tmp = position
+                        }catch (exception:Exception){
+                            Log.d("exception",exception.toString())
+                        }
+
+                    }
+                })
+
+            }else
+                igpost_linear_h.visibility = View.GONE
+
             igpost_date.text = ig.date
-            //igpost_viewpager.adapter = IgPostPagerAdapter(mContext,ig.imgurls)
-            //igpost_linear_h
             igpost_content.setText(ig.content)
             igpost_content.resetState(true)
             igpost_content.drawableExpand = null
@@ -291,5 +309,21 @@ class MainAdapter()  : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun setListener(onReceiveDataListener: OnReceiveDataListener){
         mListener = onReceiveDataListener
+    }
+
+    fun bindDotView(linearLayout:LinearLayout,count:Int){
+        linearLayout.visibility = View.VISIBLE
+        linearLayout.removeAllViewsInLayout()
+        linearLayout.removeAllViews()
+        for(i in 0 until count){
+            val view = View(mContext)
+            view.setBackgroundResource(R.drawable.mainimgs_dot)
+            view.isEnabled = false
+            val dot_dis = mContext.resources.getDimension(R.dimen.dot_dis).toInt()
+            val layoutParams = LinearLayout.LayoutParams(dot_dis, dot_dis)
+            layoutParams.leftMargin = 10
+            linearLayout.addView(view, layoutParams)
+        }
+        linearLayout.getChildAt(0).isEnabled = true
     }
 }
