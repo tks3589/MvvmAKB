@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.mvvmakb.OnReceiveDataListener
 import com.example.mvvmakb.R
 import com.example.mvvmakb.model.LiveRecord
 import com.example.mvvmakb.viewmodel.LiveRecordViewModel
@@ -19,16 +20,31 @@ class LiveRecordAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     private val VIEW_TYPE_DONE = 2
     private lateinit var mContext: Context
     private lateinit var mViewModel: LiveRecordViewModel
+    private lateinit var mListener: OnReceiveDataListener
     private var liveRecordList: List<LiveRecord> = listOf()
     private var empty = false
 
     constructor(context: Context):this(){
         mContext = context as FragmentActivity
         mViewModel = ViewModelProvider(context).get(LiveRecordViewModel::class.java)
+        mViewModel.setListener(object :OnReceiveDataListener{
+            override fun onReceiveData() {
+                mListener.onReceiveData()
+            }
+
+            override fun onFailedToReceiveData() {
+                mListener.onFailedToReceiveData()
+            }
+
+            override fun onNoMoreData() {
+            }
+
+        })
         mViewModel.getLiveData().observe(context,androidx.lifecycle.Observer{
             liveRecordList = it
             notifyDataSetChanged()
         })
+        refresh()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -71,14 +87,31 @@ class LiveRecordAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         fun bind(liveRecord: LiveRecord){
             Glide.with(mContext).load(liveRecord.imgurl).into(liverecord_imgview)
             liverecord_name.text = liveRecord.cname
-            liverecord_time.text = "開播時間：${liveRecord.date} ${liveRecord.livetime}～${liveRecord.offlivetime}"
+            liverecord_time.text = "開播時間：${formatDate(liveRecord.date)} ${formatTime(liveRecord.livetime)} ~ ${formatTime(liveRecord.offlivetime)}"
             if(!liveRecord.islive)
                 liverecord_livetag.visibility = View.GONE
             else
                 liverecord_livetag.visibility = View.VISIBLE
         }
+
+        private fun formatDate(date:String):String{
+            return date.substring(0,4)+"/"+date.substring(4,6)+"/"+date.substring(6,8)
+        }
+
+        private fun formatTime(time:String):String{
+            return time.substring(0,2)+":"+time.substring(2,4)
+        }
     }
     inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class DoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    fun refresh(){
+        mViewModel.refreshData()
+        mViewModel.loadLiveRecordData()
+    }
+
+    fun setListener(onReceiveDataListener: OnReceiveDataListener){
+        mListener = onReceiveDataListener
+    }
 
 }

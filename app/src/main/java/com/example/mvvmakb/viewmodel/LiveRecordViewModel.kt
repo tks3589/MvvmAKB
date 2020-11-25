@@ -8,13 +8,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LiveRecordViewModel : ViewModel() {
+class LiveRecordViewModel : BaseViewModel() {
     private var items = MutableLiveData<List<LiveRecord>>()
 
-    fun getLiveData() : MutableLiveData<List<LiveRecord>>{
+    fun loadLiveRecordData(){
         RetrofitHelper.instance.getLiveRecord(object :Callback<List<LiveRecord>>{
             override fun onFailure(call: Call<List<LiveRecord>>, t: Throwable) {
-
+                mListener.onFailedToReceiveData()
             }
 
             override fun onResponse(
@@ -23,16 +23,20 @@ class LiveRecordViewModel : ViewModel() {
             ) {
                 if(response.isSuccessful){
                     items.value = response.body()
+                    mListener.onReceiveData()
                 }else{
-
+                    mListener.onFailedToReceiveData()
                 }
             }
 
         })
+    }
+
+    fun getLiveData() : MutableLiveData<List<LiveRecord>>{
         return items
     }
 
-    fun loadMoreData(){
-
+    fun refreshData(){
+        items.value = arrayListOf()
     }
 }
