@@ -7,6 +7,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 class RetrofitHelper {
@@ -26,6 +27,7 @@ class RetrofitHelper {
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
@@ -119,7 +121,19 @@ class RetrofitHelper {
             }
 
         })
+    }
 
+    fun getAbout(callback: Callback<String>){
+        service.getAbout().enqueue(object : Callback<String>{
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                callback.onFailure(call, t)
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                callback.onResponse(call, response)
+            }
+
+        })
     }
 
 }

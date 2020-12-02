@@ -22,8 +22,21 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.AboutActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".activity.LiveRecordActivity"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.RelatedVideoActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.SocialRankActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.SettingActivity"
+            android:screenOrientation="portrait"/>
+
 
     </application>
 

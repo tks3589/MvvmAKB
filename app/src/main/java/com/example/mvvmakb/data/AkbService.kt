@@ -34,4 +34,7 @@ interface AkbService {
         @Path("date")
         date: String
     ): Call<ArrayList<Ig>>
+
+    @GET("about2")
+    fun getAbout(): Call<String>
 }

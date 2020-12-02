@@ -7,7 +7,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import com.example.mvvmakb.activity.LiveRecordActivity
+import com.example.mvvmakb.activity.*
 import com.example.mvvmakb.fragment.EventsFragment
 import com.example.mvvmakb.fragment.MainFragment
 import com.example.mvvmakb.fragment.MembersFragment
@@ -83,12 +83,30 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         drawer_layout.closeDrawer(GravityCompat.START)
         return when(item.itemId){
+            R.id.nav_about -> {
+                startActivity(Intent(this,AboutActivity::class.java))
+                true
+            }
             R.id.nav_langlive -> {
                 startActivity(Intent(this,LiveRecordActivity::class.java))
                 true
             }
+            R.id.nav_video -> {
+                startActivity(Intent(this,RelatedVideoActivity::class.java))
+                true
+            }
+            R.id.nav_socialrank -> {
+                startActivity(Intent(this,SocialRankActivity::class.java))
+                true
+            }
+            R.id.nav_setting -> {
+                startActivity(Intent(this,SettingActivity::class.java))
+                true
+            }
+            R.id.nav_review -> {
+                true
+            }
             else -> true
         }
-        return true
     }
 }
